@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RevenueRouteImport } from './routes/revenue'
 import { Route as OutreachRouteImport } from './routes/outreach'
+import { Route as InboundRouteImport } from './routes/inbound'
 import { Route as ContentRouteImport } from './routes/content'
 import { Route as ComplianceRouteImport } from './routes/compliance'
 import { Route as IndexRouteImport } from './routes/index'
@@ -23,6 +24,11 @@ const RevenueRoute = RevenueRouteImport.update({
 const OutreachRoute = OutreachRouteImport.update({
   id: '/outreach',
   path: '/outreach',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InboundRoute = InboundRouteImport.update({
+  id: '/inbound',
+  path: '/inbound',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContentRoute = ContentRouteImport.update({
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/compliance': typeof ComplianceRoute
   '/content': typeof ContentRoute
+  '/inbound': typeof InboundRoute
   '/outreach': typeof OutreachRoute
   '/revenue': typeof RevenueRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/compliance': typeof ComplianceRoute
   '/content': typeof ContentRoute
+  '/inbound': typeof InboundRoute
   '/outreach': typeof OutreachRoute
   '/revenue': typeof RevenueRoute
 }
@@ -60,21 +68,36 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/compliance': typeof ComplianceRoute
   '/content': typeof ContentRoute
+  '/inbound': typeof InboundRoute
   '/outreach': typeof OutreachRoute
   '/revenue': typeof RevenueRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/compliance' | '/content' | '/outreach' | '/revenue'
+  fullPaths:
+    | '/'
+    | '/compliance'
+    | '/content'
+    | '/inbound'
+    | '/outreach'
+    | '/revenue'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/compliance' | '/content' | '/outreach' | '/revenue'
-  id: '__root__' | '/' | '/compliance' | '/content' | '/outreach' | '/revenue'
+  to: '/' | '/compliance' | '/content' | '/inbound' | '/outreach' | '/revenue'
+  id:
+    | '__root__'
+    | '/'
+    | '/compliance'
+    | '/content'
+    | '/inbound'
+    | '/outreach'
+    | '/revenue'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ComplianceRoute: typeof ComplianceRoute
   ContentRoute: typeof ContentRoute
+  InboundRoute: typeof InboundRoute
   OutreachRoute: typeof OutreachRoute
   RevenueRoute: typeof RevenueRoute
 }
@@ -93,6 +116,13 @@ declare module '@tanstack/react-router' {
       path: '/outreach'
       fullPath: '/outreach'
       preLoaderRoute: typeof OutreachRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inbound': {
+      id: '/inbound'
+      path: '/inbound'
+      fullPath: '/inbound'
+      preLoaderRoute: typeof InboundRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/content': {
@@ -123,6 +153,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ComplianceRoute: ComplianceRoute,
   ContentRoute: ContentRoute,
+  InboundRoute: InboundRoute,
   OutreachRoute: OutreachRoute,
   RevenueRoute: RevenueRoute,
 }
