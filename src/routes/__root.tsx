@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { AppSidebar } from "@/components/app-sidebar";
+import { AuthProvider } from "@/context/AuthContext";
 
 function NotFoundComponent() {
   return (
@@ -118,12 +119,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <Outlet />
+      <AuthProvider>
+        <div className="flex min-h-screen w-full bg-background">
+          <AppSidebar />
+          <div className="flex min-w-0 flex-1 flex-col">
+            <Outlet />
+          </div>
         </div>
-      </div>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
