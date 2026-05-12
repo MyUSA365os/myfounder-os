@@ -11,6 +11,7 @@ import {
 import appCss from "../styles.css?url";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AuthProvider } from "@/context/AuthContext";
+import { RequireAuth } from "@/components/require-auth";
 
 function NotFoundComponent() {
   return (
@@ -116,16 +117,25 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouter().state.location.pathname;
+  const isPublic = pathname === "/login";
 
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <div className="flex min-h-screen w-full bg-background">
-          <AppSidebar />
-          <div className="flex min-w-0 flex-1 flex-col">
-            <Outlet />
-          </div>
-        </div>
+        {isPublic ? (
+          // Public routes (e.g. /login) — no sidebar, no auth guard
+          <Outlet />
+        ) : (
+          <RequireAuth>
+            <div className="flex min-h-screen w-full bg-background">
+              <AppSidebar />
+              <div className="flex min-w-0 flex-1 flex-col">
+                <Outlet />
+              </div>
+            </div>
+          </RequireAuth>
+        )}
       </AuthProvider>
     </QueryClientProvider>
   );

@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   TrendingUp,
   Send,
@@ -8,8 +8,12 @@ import {
   MapPin,
   Users,
   Activity,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { useWorkspace } from "@/hooks/useWorkspace";
+import { Button } from "@/components/ui/button";
 
 const primary = [
   { title: "Revenue", url: "/revenue", icon: TrendingUp },
@@ -26,6 +30,18 @@ const secondary = [
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+  const { data: workspace } = useWorkspace();
+
+  async function handleSignOut() {
+    try {
+      await signOut();
+      navigate({ to: "/login" });
+    } catch (err) {
+      console.error("Sign out failed:", err);
+    }
+  }
 
   const NavItem = ({
     item,
@@ -91,13 +107,25 @@ export function AppSidebar() {
         </div>
       </nav>
 
-      <div className="border-t border-sidebar-border p-4">
+      <div className="border-t border-sidebar-border p-4 space-y-3">
         <div className="rounded-md bg-sidebar-accent/40 p-3 text-xs text-sidebar-foreground/80">
           <div className="mb-1 font-medium text-sidebar-foreground">
-            Workspace
+            {workspace?.name ?? "Workspace"}
           </div>
-          MyUSA Founders · Internal
+          <div className="truncate text-sidebar-foreground/60" title={user?.email ?? ""}>
+            {user?.email ?? "—"}
+          </div>
         </div>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleSignOut}
+          className="w-full justify-start gap-2 text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+        >
+          <LogOut className="h-3.5 w-3.5" />
+          Sign out
+        </Button>
       </div>
     </aside>
   );

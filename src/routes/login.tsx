@@ -5,22 +5,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+type LoginSearch = { redirect?: string };
+
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Sign in — Founder OS" }] }),
+  validateSearch: (search): LoginSearch => ({
+    redirect: typeof search.redirect === "string" ? search.redirect : undefined,
+  }),
   component: LoginPage,
 });
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { redirect } = Route.useSearch();
   const { signInWithEmail, session } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Already signed in — bounce to revenue
+  // Already signed in — bounce to the originally requested route or /revenue
   if (session) {
-    navigate({ to: "/revenue" });
+    navigate({ to: redirect ?? "/revenue" });
     return null;
   }
 
@@ -30,7 +36,7 @@ function LoginPage() {
     setSubmitting(true);
     try {
       await signInWithEmail(email, password);
-      navigate({ to: "/revenue" });
+      navigate({ to: redirect ?? "/revenue" });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Sign in failed");
     } finally {
