@@ -25,7 +25,7 @@ const replies = [
   { who: "Tomás / Riverline", snippet: "Can we do a 15-min intro Thursday?", urgency: "hot" },
 ];
 
-const hot = [
+const hotProspects = [
   { name: "Greenline HVAC", score: 94, source: "Inbound form", lane: "Core" },
   { name: "Halcyon Builders", score: 88, source: "Cold email", lane: "Expansion" },
   { name: "Bayside Pediatrics", score: 81, source: "Referral", lane: "Cohort" },
@@ -79,7 +79,7 @@ function OutreachPage() {
 
           <Section title="Hot prospects" description="Top scored, last 7 days." className="lg:col-span-2" action={<Flame className="h-4 w-4 text-destructive" />}>
             <ul className="space-y-2">
-              {hot.map((p) => (
+              {hotProspects.map((p) => (
                 <li key={p.name} className="flex items-center gap-3 rounded-md border border-border bg-background/40 px-3 py-2">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent/15 text-xs font-semibold text-accent">
                     {p.score}
