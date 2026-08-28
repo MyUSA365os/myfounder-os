@@ -75,7 +75,10 @@ export function useLeadCounts(workspaceId: string | undefined) {
         .from('leads')
         .select('stage, score')
         .eq('workspace_id', workspaceId!)
+        .returns<{ stage: Lead['stage']; score: number }[]>()
       if (error) throw new Error(`useLeadCounts: ${error.message}`)
+
+
 
       const active   = data.filter((l) => !['closed', 'lost'].includes(l.stage)).length
       const hot      = data.filter((l) => l.score >= 75).length
