@@ -95,17 +95,9 @@ function LoginPage() {
         </form>
 
         <p className="mt-4 text-center text-xs text-muted-foreground">
-          Don't have an account yet? Create one in the{" "}
-          <a
-            href="https://supabase.com/dashboard/project/lqgdiuovlutugreuzqkl/auth/users"
-            target="_blank"
-            rel="noreferrer"
-            className="underline hover:text-foreground"
-          >
-            Supabase dashboard
-          </a>
-          .
+          Access is invite-only. Ask your workspace owner to create your account.
         </p>
+
       </div>
     </div>
   );
