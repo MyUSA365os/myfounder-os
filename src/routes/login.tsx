@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,10 +20,25 @@ function LoginPage() {
   const navigate = useNavigate();
   const { redirect } = Route.useSearch();
   const { signInWithEmail, session } = useAuth();
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [signupAllowed, setSignupAllowed] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    supabase
+      .rpc("signup_allowed")
+      .then(({ data }) => {
+        if (active) setSignupAllowed(data === true);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // Already signed in — bounce to the originally requested route or /revenue
   if (session) {
@@ -33,9 +49,26 @@ function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (mode === "signup" && password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
     setSubmitting(true);
     try {
-      await signInWithEmail(email, password);
+      if (mode === "signup") {
+        const { error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { emailRedirectTo: window.location.origin },
+        });
+        if (signUpError) throw signUpError;
+        // Auto-confirm is on for the bootstrap account — sign straight in.
+        await signInWithEmail(email, password);
+      } else {
+        await signInWithEmail(email, password);
+      }
       navigate({ to: redirect ?? "/revenue" });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Sign in failed");
@@ -43,6 +76,7 @@ function LoginPage() {
       setSubmitting(false);
     }
   }
+
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-background p-6">
@@ -52,7 +86,7 @@ function LoginPage() {
             Founder Revenue OS
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Sign in to your workspace
+            {mode === "signup" ? "Create the owner account" : "Sign in to your workspace"}
           </p>
         </div>
 
@@ -75,13 +109,28 @@ function LoginPage() {
             <Input
               id="password"
               type="password"
-              autoComplete="current-password"
+              autoComplete={mode === "signup" ? "new-password" : "current-password"}
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
             />
           </div>
+
+          {mode === "signup" && (
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+              />
+            </div>
+          )}
 
           {error && (
             <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
@@ -90,13 +139,38 @@ function LoginPage() {
           )}
 
           <Button type="submit" className="w-full" disabled={submitting}>
-            {submitting ? "Signing in…" : "Sign in"}
+            {submitting
+              ? mode === "signup"
+                ? "Creating account…"
+                : "Signing in…"
+              : mode === "signup"
+                ? "Create account"
+                : "Sign in"}
           </Button>
+
+          {signupAllowed && (
+            <button
+              type="button"
+              onClick={() => {
+                setError(null);
+                setConfirmPassword("");
+                setMode(mode === "signup" ? "signin" : "signup");
+              }}
+              className="w-full text-center text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
+              {mode === "signup"
+                ? "Already have an account? Sign in"
+                : "First time here? Create the owner account"}
+            </button>
+          )}
         </form>
 
         <p className="mt-4 text-center text-xs text-muted-foreground">
-          Access is invite-only. Ask your workspace owner to create your account.
+          {signupAllowed
+            ? "One-time setup: the first account created becomes the workspace owner. After that, access is invite-only."
+            : "Access is invite-only. Ask your workspace owner to create your account."}
         </p>
+
 
       </div>
     </div>
