@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,10 +20,25 @@ function LoginPage() {
   const navigate = useNavigate();
   const { redirect } = Route.useSearch();
   const { signInWithEmail, session } = useAuth();
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [signupAllowed, setSignupAllowed] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    supabase
+      .rpc("signup_allowed")
+      .then(({ data }) => {
+        if (active) setSignupAllowed(data === true);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // Already signed in — bounce to the originally requested route or /revenue
   if (session) {
@@ -33,9 +49,26 @@ function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (mode === "signup" && password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
     setSubmitting(true);
     try {
-      await signInWithEmail(email, password);
+      if (mode === "signup") {
+        const { error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { emailRedirectTo: window.location.origin },
+        });
+        if (signUpError) throw signUpError;
+        // Auto-confirm is on for the bootstrap account — sign straight in.
+        await signInWithEmail(email, password);
+      } else {
+        await signInWithEmail(email, password);
+      }
       navigate({ to: redirect ?? "/revenue" });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Sign in failed");
@@ -43,6 +76,7 @@ function LoginPage() {
       setSubmitting(false);
     }
   }
+
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-background p-6">
