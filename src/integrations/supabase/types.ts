@@ -431,6 +431,10 @@ export type Database = {
     }
     Functions: {
       my_workspace_id: { Args: never; Returns: string }
+      provision_user_workspace: {
+        Args: { user_id: string; workspace_name: string }
+        Returns: string
+      }
       signup_allowed: { Args: never; Returns: boolean }
     }
     Enums: {
