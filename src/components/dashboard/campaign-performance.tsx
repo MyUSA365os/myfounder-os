@@ -126,6 +126,9 @@ function BrandBlock({ b }: { b: BrandReport }) {
           </table>
         </div>
       )}
+      {b.truncated && (
+        <p className="text-xs text-muted-foreground">Partial data (read limit reached)</p>
+      )}
       <p className="text-xs text-muted-foreground">
         Recorded deal value is the value of won deals in uGotLeads, not collected payments. Commissions are not tracked.
       </p>
