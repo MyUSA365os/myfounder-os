@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowRight, Sparkles, Trophy } from "lucide-react";
 import { useWorkspace } from "@/hooks/useWorkspace";
+import { CampaignPerformance } from "@/components/dashboard/campaign-performance";
 import {
   useRevenueLanes,
   useOfferTiers,
@@ -259,6 +260,8 @@ function RevenuePage() {
             </div>
           </Section>
         </div>
+
+        <CampaignPerformance />
 
       </main>
     </>
