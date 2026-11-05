@@ -47,7 +47,12 @@ export const getCampaignPerformance = createServerFn({ method: "GET" })
             return { brand: b.name, rows: [], truncated: false, error: "unavailable" };
           }
           const json = (await res.json()) as unknown;
-          const obj = (Array.isArray(json) ? { rows: json } : json) as {
+          const inner =
+            json && typeof json === "object" && !Array.isArray(json) && "data" in json &&
+            (json as { data?: unknown }).data && typeof (json as { data?: unknown }).data === "object"
+              ? (json as { data: unknown }).data
+              : json;
+          const obj = (Array.isArray(inner) ? { rows: inner } : inner) as {
             rows?: CampaignRow[];
             truncated?: boolean;
           };
