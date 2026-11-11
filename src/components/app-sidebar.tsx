@@ -8,6 +8,7 @@ import {
   MapPin,
   Users,
   Activity,
+  Mail,
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ const secondary = [
   { title: "Inbound", url: "/inbound", icon: Inbox },
   { title: "Local Growth", url: "/local-growth", icon: MapPin },
   { title: "Partners", url: "/partners", icon: Users },
+  { title: "Email Connections", url: "/email-connections", icon: Mail },
 ];
 
 export function AppSidebar() {
