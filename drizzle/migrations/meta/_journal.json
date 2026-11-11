@@ -8,6 +8,13 @@
       "when": 1794428581426,
       "tag": "0000_business_email_connections_foundation",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794433252105,
+      "tag": "0001_harden_email_configuration_permissions",
+      "breakpoints": true
     }
   ]
 }

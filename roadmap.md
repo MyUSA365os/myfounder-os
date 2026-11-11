@@ -1,5 +1,5 @@
 # Email Connections foundation
-- [ ] Add tenant-owned business and mailbox configuration with audited changes.
-- [ ] Add Email Connections administration and truthful blocked credential state.
-- [ ] Document secure mailbox adapter, incremental ingestion, approval and export contracts.
-- [ ] Verify authorization, isolation, safe output and disabled sending; do not publish.
+- [ ] Verify applied configuration schema and repair inherited permissions without duplicating the foundation migration.
+- [ ] Finish authenticated Email Connections administration, navigation and blocked mailbox controls.
+- [x] Document secure mailbox adapter, incremental ingestion, approval and export contracts.
+- [ ] Run regression, tenant-isolation and authenticated preview checks; do not publish.
