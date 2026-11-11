@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { LockKeyhole, Mail, Plus, RefreshCw, Save, ShieldCheck } from "lucide-react";
+import { ExternalLink, LockKeyhole, Mail, Plus, RefreshCw, Save, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,6 +22,7 @@ import {
   saveEmailConfiguration,
 } from "@/lib/email-connections.functions";
 import { businessInput, connectionInput, type Business } from "@/lib/email-connections.schema";
+import { mailboxLinkForBusiness } from "@/lib/mailbox-workspace-links";
 
 export function EmailConnectionsAdmin() {
   const { user } = useAuth();
@@ -72,7 +73,8 @@ export function EmailConnectionsAdmin() {
           <h3 className="font-medium">Needs secure credential backend</h3>
           <p className="mt-1 text-sm text-muted-foreground">
             Configuration only. No mailbox is connected. Password entry, testing, sync and sending
-            are unavailable.
+            are unavailable. Namecheap connection and tests are managed in uGotLeads; this Founder HQ
+            page only stores configuration.
           </p>
         </div>
       </div>
@@ -142,11 +144,14 @@ function WorkspaceAdministration({ workspaceId, userId }: { workspaceId: string;
           <p className="text-sm text-muted-foreground">No mailbox configurations saved.</p>
         ) : (
           <div className="grid gap-4 xl:grid-cols-2">
-            {connections.map((connection) => (
+            {connections.map((connection) => {
+              const name = businessName(connection.business_id);
+              const mailboxLink = mailboxLinkForBusiness(name);
+              return (
               <article key={connection.id} className="min-w-0 rounded-md border border-border p-5">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <h4 className="font-semibold">{businessName(connection.business_id)}</h4>
+                    <h4 className="font-semibold">{name}</h4>
                     <p className="mt-1 break-all text-sm text-muted-foreground">
                       {connection.email}
                     </p>
@@ -155,6 +160,24 @@ function WorkspaceAdministration({ workspaceId, userId }: { workspaceId: string;
                     {connection.status === "not_connected" ? "Not connected" : "Needs credentials"}
                   </Badge>
                 </div>
+                {mailboxLink && (
+                  <div className="mt-4 rounded-md border border-primary/40 bg-primary/5 p-4">
+                    <p className="text-sm font-medium">Live mailbox is managed in uGotLeads</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Namecheap connection and tests are managed in uGotLeads; this Founder HQ page
+                      only stores configuration.
+                    </p>
+                    <Button asChild size="sm" className="mt-3">
+                      <a href={mailboxLink} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink className="mr-2 h-4 w-4" />
+                        Manage live {name} mailbox in uGotLeads
+                      </a>
+                    </Button>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      In uGotLeads, scroll to Mailbox.
+                    </p>
+                  </div>
+                )}
                 <dl className="mt-4 space-y-2 text-sm">
                   <div>
                     <dt className="text-muted-foreground">IMAP · SSL/TLS</dt>
@@ -181,7 +204,8 @@ function WorkspaceAdministration({ workspaceId, userId }: { workspaceId: string;
                   </Button>
                 </div>
               </article>
-            ))}
+              );
+            })}
           </div>
         )}
       </section>
