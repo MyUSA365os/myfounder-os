@@ -1,4 +1,15 @@
-import { describe, expect, test } from "bun:test";
+import { describe, it as test } from "node:test";
+import assert from "node:assert/strict";
+
+function expect(actual: unknown) {
+  return {
+    toEqual: (expected: unknown) => assert.deepEqual(actual, expected),
+    toBe: (expected: unknown) => assert.equal(actual, expected),
+    not: {
+      toHaveProperty: (key: string) => assert.equal(Object.prototype.hasOwnProperty.call(actual, key), false),
+    },
+  };
+}
 import {
   businessInput,
   connectionInput,
