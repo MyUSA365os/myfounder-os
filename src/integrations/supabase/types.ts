@@ -14,6 +14,127 @@ export type Database = {
   }
   public: {
     Tables: {
+      business_email_audit: {
+        Row: {
+          action: string
+          actor_id: string
+          business_id: string
+          connection_id: string | null
+          created_at: string
+          id: string
+          workspace_id: string
+        }
+        Insert: {
+          action: string
+          actor_id: string
+          business_id: string
+          connection_id?: string | null
+          created_at?: string
+          id?: string
+          workspace_id: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          business_id?: string
+          connection_id?: string | null
+          created_at?: string
+          id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_email_audit_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "business_email_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "business_email_audit_workspace_id_business_id_fkey"
+            columns: ["workspace_id", "business_id"]
+            isOneToOne: false
+            referencedRelation: "email_businesses"
+            referencedColumns: ["workspace_id", "id"]
+          },
+          {
+            foreignKeyName: "business_email_audit_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      business_email_connections: {
+        Row: {
+          business_id: string
+          created_at: string
+          created_by: string
+          email: string
+          id: string
+          imap_host: string
+          imap_port: number
+          imap_tls: boolean
+          provider: string
+          smtp_host: string
+          smtp_port: number
+          smtp_tls: boolean
+          status: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          created_by?: string
+          email: string
+          id?: string
+          imap_host: string
+          imap_port?: number
+          imap_tls?: boolean
+          provider: string
+          smtp_host: string
+          smtp_port?: number
+          smtp_tls?: boolean
+          status?: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          created_by?: string
+          email?: string
+          id?: string
+          imap_host?: string
+          imap_port?: number
+          imap_tls?: boolean
+          provider?: string
+          smtp_host?: string
+          smtp_port?: number
+          smtp_tls?: boolean
+          status?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_email_connections_workspace_id_business_id_fkey"
+            columns: ["workspace_id", "business_id"]
+            isOneToOne: false
+            referencedRelation: "email_businesses"
+            referencedColumns: ["workspace_id", "id"]
+          },
+          {
+            foreignKeyName: "business_email_connections_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dreaming_reports: {
         Row: {
           generated_at: string
@@ -42,6 +163,35 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "dreaming_reports_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_businesses: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_businesses_workspace_id_fkey"
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
