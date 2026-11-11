@@ -6,7 +6,8 @@ function expect(actual: unknown) {
     toEqual: (expected: unknown) => assert.deepEqual(actual, expected),
     toBe: (expected: unknown) => assert.equal(actual, expected),
     not: {
-      toHaveProperty: (key: string) => assert.equal(Object.prototype.hasOwnProperty.call(actual, key), false),
+      toHaveProperty: (key: string) =>
+        assert.equal(Object.prototype.hasOwnProperty.call(actual, key), false),
     },
   };
 }
