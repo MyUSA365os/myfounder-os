@@ -42,13 +42,14 @@ async def main():
             const result = await supabase.from(table).select('id').eq('workspace_id',other);
             assert(!result.error && result.data.length === 0, 'RLS hides foreign '+table);
           }
+          const foreignInsert = await supabase.from('email_businesses').insert({workspace_id:other,name:'Forbidden regression'});
+          assert(Boolean(foreignInsert.error), 'RLS denies foreign business inserts');
           const update = await supabase.from('email_businesses').update({name:'Forbidden regression'}).eq('id',business.id);
           assert(Boolean(update.error), 'Database denies configuration edits');
           const forged = await supabase.from('business_email_audit').insert({workspace_id:own,business_id:business.id,actor_id:owned.audit[0].actor_id,action:'business_created'});
           assert(Boolean(forged.error), 'Database denies forged audit events');
-          const anonymous = await fetch(import.meta.env?.VITE_SUPABASE_URL || '/not-used');
           return checks;
-        }""".replace("          const anonymous = await fetch(import.meta.env?.VITE_SUPABASE_URL || '/not-used');\n", ""), [OWNER_WORKSPACE, OTHER_WORKSPACE])
+        }""", [OWNER_WORKSPACE, OTHER_WORKSPACE])
         for result in results:
             print("PASS:", result)
         for name in ["Test connection", "Sync", "Send"]:
