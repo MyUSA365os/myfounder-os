@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { LockKeyhole, Mail, Plus, RefreshCw, Save, ShieldCheck } from "lucide-react";
+import { ExternalLink, LockKeyhole, Mail, Plus, RefreshCw, Save, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,6 +22,7 @@ import {
   saveEmailConfiguration,
 } from "@/lib/email-connections.functions";
 import { businessInput, connectionInput, type Business } from "@/lib/email-connections.schema";
+import { mailboxLinkForBusiness } from "@/lib/mailbox-workspace-links";
 
 export function EmailConnectionsAdmin() {
   const { user } = useAuth();
@@ -72,7 +73,8 @@ export function EmailConnectionsAdmin() {
           <h3 className="font-medium">Needs secure credential backend</h3>
           <p className="mt-1 text-sm text-muted-foreground">
             Configuration only. No mailbox is connected. Password entry, testing, sync and sending
-            are unavailable.
+            are unavailable. Namecheap connection and tests are managed in uGotLeads; this Founder HQ
+            page only stores configuration.
           </p>
         </div>
       </div>
