@@ -6,9 +6,15 @@ export const Route = createFileRoute("/email-connections")({
   head: () => ({
     meta: [
       { title: "Email Connections — Founder HQ" },
-      { name: "description", content: "Owner-only business mailbox configuration and audit history in Founder HQ." },
+      {
+        name: "description",
+        content: "Owner-only business mailbox configuration and audit history in Founder HQ.",
+      },
       { property: "og:title", content: "Email Connections — Founder HQ" },
-      { property: "og:description", content: "Owner-only business mailbox configuration and audit history in Founder HQ." },
+      {
+        property: "og:description",
+        content: "Owner-only business mailbox configuration and audit history in Founder HQ.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex, nofollow" },
@@ -18,5 +24,10 @@ export const Route = createFileRoute("/email-connections")({
 });
 
 function EmailConnectionsPage() {
-  return <><AppHeader title="Email Connections" /><EmailConnectionsAdmin /></>;
+  return (
+    <>
+      <AppHeader title="Email Connections" />
+      <EmailConnectionsAdmin />
+    </>
+  );
 }
