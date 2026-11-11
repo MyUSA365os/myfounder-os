@@ -204,7 +204,8 @@ function WorkspaceAdministration({ workspaceId, userId }: { workspaceId: string;
                   </Button>
                 </div>
               </article>
-            ))}
+              );
+            })}
           </div>
         )}
       </section>
