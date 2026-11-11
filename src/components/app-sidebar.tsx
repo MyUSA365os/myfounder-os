@@ -8,6 +8,7 @@ import {
   MapPin,
   Users,
   Activity,
+  Mail,
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ const secondary = [
   { title: "Inbound", url: "/inbound", icon: Inbox },
   { title: "Local Growth", url: "/local-growth", icon: MapPin },
   { title: "Partners", url: "/partners", icon: Users },
+  { title: "Email Connections", url: "/email-connections", icon: Mail },
 ];
 
 export function AppSidebar() {
@@ -43,11 +45,7 @@ export function AppSidebar() {
     }
   }
 
-  const NavItem = ({
-    item,
-  }: {
-    item: { title: string; url: string; icon: typeof TrendingUp };
-  }) => {
+  const NavItem = ({ item }: { item: { title: string; url: string; icon: typeof TrendingUp } }) => {
     const active = pathname === item.url;
     const Icon = item.icon;
     return (
@@ -62,9 +60,7 @@ export function AppSidebar() {
       >
         <Icon className="h-4 w-4 shrink-0" />
         <span className="truncate">{item.title}</span>
-        {active && (
-          <span className="ml-auto h-1.5 w-1.5 rounded-full bg-sidebar-primary" />
-        )}
+        {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-sidebar-primary" />}
       </Link>
     );
   };
@@ -77,9 +73,7 @@ export function AppSidebar() {
         </div>
         <div className="leading-tight">
           <div className="text-sm font-semibold tracking-tight">Founder OS</div>
-          <div className="text-[11px] text-sidebar-foreground/60">
-            Revenue control plane
-          </div>
+          <div className="text-[11px] text-sidebar-foreground/60">Revenue control plane</div>
         </div>
       </div>
 

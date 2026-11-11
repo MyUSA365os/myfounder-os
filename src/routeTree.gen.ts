@@ -15,6 +15,7 @@ import { Route as OutreachRouteImport } from './routes/outreach'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LocalGrowthRouteImport } from './routes/local-growth'
 import { Route as InboundRouteImport } from './routes/inbound'
+import { Route as EmailConnectionsRouteImport } from './routes/email-connections'
 import { Route as ContentRouteImport } from './routes/content'
 import { Route as ComplianceRouteImport } from './routes/compliance'
 import { Route as IndexRouteImport } from './routes/index'
@@ -49,6 +50,11 @@ const InboundRoute = InboundRouteImport.update({
   path: '/inbound',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmailConnectionsRoute = EmailConnectionsRouteImport.update({
+  id: '/email-connections',
+  path: '/email-connections',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContentRoute = ContentRouteImport.update({
   id: '/content',
   path: '/content',
@@ -69,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/compliance': typeof ComplianceRoute
   '/content': typeof ContentRoute
+  '/email-connections': typeof EmailConnectionsRoute
   '/inbound': typeof InboundRoute
   '/local-growth': typeof LocalGrowthRoute
   '/login': typeof LoginRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/compliance': typeof ComplianceRoute
   '/content': typeof ContentRoute
+  '/email-connections': typeof EmailConnectionsRoute
   '/inbound': typeof InboundRoute
   '/local-growth': typeof LocalGrowthRoute
   '/login': typeof LoginRoute
@@ -92,6 +100,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/compliance': typeof ComplianceRoute
   '/content': typeof ContentRoute
+  '/email-connections': typeof EmailConnectionsRoute
   '/inbound': typeof InboundRoute
   '/local-growth': typeof LocalGrowthRoute
   '/login': typeof LoginRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/'
     | '/compliance'
     | '/content'
+    | '/email-connections'
     | '/inbound'
     | '/local-growth'
     | '/login'
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/'
     | '/compliance'
     | '/content'
+    | '/email-connections'
     | '/inbound'
     | '/local-growth'
     | '/login'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/'
     | '/compliance'
     | '/content'
+    | '/email-connections'
     | '/inbound'
     | '/local-growth'
     | '/login'
@@ -139,6 +151,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ComplianceRoute: typeof ComplianceRoute
   ContentRoute: typeof ContentRoute
+  EmailConnectionsRoute: typeof EmailConnectionsRoute
   InboundRoute: typeof InboundRoute
   LocalGrowthRoute: typeof LocalGrowthRoute
   LoginRoute: typeof LoginRoute
@@ -191,6 +204,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InboundRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/email-connections': {
+      id: '/email-connections'
+      path: '/email-connections'
+      fullPath: '/email-connections'
+      preLoaderRoute: typeof EmailConnectionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/content': {
       id: '/content'
       path: '/content'
@@ -219,6 +239,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ComplianceRoute: ComplianceRoute,
   ContentRoute: ContentRoute,
+  EmailConnectionsRoute: EmailConnectionsRoute,
   InboundRoute: InboundRoute,
   LocalGrowthRoute: LocalGrowthRoute,
   LoginRoute: LoginRoute,
