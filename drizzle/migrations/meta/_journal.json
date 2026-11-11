@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1794428581426,
+      "tag": "0000_business_email_connections_foundation",
+      "breakpoints": true
+    }
+  ]
+}
