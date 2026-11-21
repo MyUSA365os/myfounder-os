@@ -10,6 +10,7 @@ export const AGENT_WORKSPACE_POLICY = Object.freeze({
 
 export const AGENT_WORKSPACE_LINKS = Object.freeze({
   issue: "https://github.com/ownyourmarket/ugotleads/issues/247",
+  evidencePr: "https://github.com/ownyourmarket/ugotleads/pull/249",
   runbook:
     "https://github.com/ownyourmarket/ugotleads/blob/main/docs/integrations/agentos-sage-revenue-pilot.md",
   desktop: "https://github.com/vercel-labs/agent-desktop",

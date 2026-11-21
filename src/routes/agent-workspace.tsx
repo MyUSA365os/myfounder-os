@@ -3,7 +3,7 @@ import { AppHeader } from "@/components/app-header";
 import { AgentWorkspace } from "@/components/agent-workspace";
 
 // The shared root RequireAuth guard owns session loading and login redirects.
-// This route has no loader, server calls, privileged data or operational actions.
+// No public loader or operational actions; evidence is fetched from the authenticated UI.
 export const Route = createFileRoute("/agent-workspace")({
   head: () => ({
     meta: [

@@ -10,6 +10,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { WorkspaceEvidenceView } from "@/components/workspace-evidence";
 import {
   AGENT_WORKSPACE_LINKS as links,
   AGENT_WORKSPACE_POLICY as policy,
@@ -74,7 +75,8 @@ export function AgentWorkspace() {
         </div>
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
           Under construction for MyUSA AI 1st OS. This is an operator workspace, not a second CRM or
-          an agent runtime. Setup states below are not live telemetry. No agents are enabled here.
+          an agent runtime. Setup checkpoints are not live telemetry; operating evidence below is
+          separately verified when available. No agents are enabled here.
         </p>
         <dl className="grid grid-cols-1 gap-4 border-y border-border py-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
@@ -122,6 +124,7 @@ export function AgentWorkspace() {
         <div className="flex flex-wrap gap-2">
           <ExternalLink href={links.issue}>Open implementation issue</ExternalLink>
           <ExternalLink href={links.runbook}>Pilot runbook</ExternalLink>
+          <ExternalLink href={links.evidencePr}>Draft evidence PR #249</ExternalLink>
         </div>
       </section>
 
@@ -129,7 +132,9 @@ export function AgentWorkspace() {
         <h2 id="work-queue" className="text-lg font-semibold">
           Work Queue
         </h2>
-        <p className="text-sm text-muted-foreground">No verified agent runs are connected yet.</p>
+        <p className="text-sm text-muted-foreground">
+          No agent work is executed from this workspace.
+        </p>
         <h3 className="text-sm font-semibold">Setup checkpoints (not executed tasks)</h3>
         <ol className="space-y-3">
           {[
@@ -163,6 +168,8 @@ export function AgentWorkspace() {
           remain with the approved existing uGotLeads backend only.
         </p>
       </section>
+
+      <WorkspaceEvidenceView />
 
       <section aria-labelledby="workforce" className="space-y-4 border-t border-border pt-6">
         <div>

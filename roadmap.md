@@ -1,8 +1,10 @@
 # Agent Workspace V0
+- [x] Add founder-only operating evidence, strict safe projection, bounded reads and truthful unavailable states.
+- [x] Run security tests, focused lint and authenticated desktop/mobile fail-closed preview checks without live operations or publishing.
 - [x] Add read-only setup console and navigation using existing sign-in protection.
 - [x] Withhold campaign data pending founder-only server authorization.
 - [x] Run focused tests, lint, signed-out guard and isolated desktop/mobile rendering checks; never publish or perform live operations.
-- Authenticated end-to-end check unavailable: no existing session supplied; credentials were not created or minted.
+- Live evidence remains blocked by missing explicit founder/read-only Main configuration and the unshipped draft endpoint; only fail-closed access was verified against the real preview.
 - Pilot execution blocked by Boost external MCP permission confirmation; campaign embedding blocked by founder-only server authorization.
 
 # Email Connections foundation
