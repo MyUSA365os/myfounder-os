@@ -1,6 +1,7 @@
 # Architecture rules
 - Agent Workspace keeps setup static and loads operating evidence only through authenticated server functions with exact configured founder UID authorization; campaign reporting stays unmounted because sign-in alone does not authorize client data.
 - Operating evidence uses a server-only read helper, dedicated Main-scoped configuration, strict safe-field projection and no retries or polling so draft services fail closed without tenant fallbacks.
+- Operating evidence accepts explicit contract nulls but rejects unknown fields and narrative codes; shared display formatters preserve unknown dates/costs instead of coercing them to epoch dates or zero.
 - Email Connections uses existing authenticated server functions and workspace ownership plus database RLS; business IDs never establish authorization on their own.
 - Mailbox configuration stores no credentials or message content; credential entry, testing, sync and sending remain fail-closed until a verified secure mailbox adapter exists.
 - Links out to an external mailbox manager come only from an explicit allowlist of human-verified business names; never derive or infer a URL from a business, workspace, or email field.

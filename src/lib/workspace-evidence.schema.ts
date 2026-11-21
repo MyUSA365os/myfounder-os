@@ -6,48 +6,60 @@ const code = z
   .min(1)
   .max(160)
   .regex(/^[A-Za-z0-9_.:/-]+$/);
-const timestamp = z.string().datetime({ offset: true });
-const count = z.number().int().nonnegative().safe();
-const cost = z.object({
-  aiKnownMicrocents: count,
-  aiUnknownRuns: count,
-  capabilityKnownMicrocents: count,
-  capabilityUnknownRuns: count,
-});
-const run = z.object({
-  id: code,
-  workflowKey: code,
-  status: code,
-  currentStepKey: code.nullable(),
-  waitingReason: code.nullable(),
-  correlationId: code.nullable(),
-  createdAt: timestamp,
-  updatedAt: timestamp,
-  cost: cost.nullable(),
-});
-const humanAction = z.object({
-  id: code,
-  actionType: code,
-  status: code,
-  priority: code,
-  correlationId: code.nullable(),
-  workflowRunId: code.nullable(),
-  createdAt: timestamp,
-});
-const envelope = z.object({
-  data: z.object({
-    source: z.literal("ugotleads_operating_memory"),
-    scope: z.object({ subAccountId: code }),
-    sampling: z.object({
-      bounded: z.literal(true),
-      capPerCollection: z.literal(100),
-      sampleLimited: z.boolean(),
-      noTotalClaims: z.literal(true),
-    }),
-    runs: z.array(run).max(100),
-    humanActions: z.array(humanAction).max(100),
-  }),
-});
+const timestamp = z.string().datetime({ offset: true }).nullable();
+const count = z.number().int().nonnegative().safe().nullable();
+const cost = z
+  .object({
+    aiKnownMicrocents: count,
+    aiUnknownRuns: count,
+    capabilityKnownMicrocents: count,
+    capabilityUnknownRuns: count,
+  })
+  .strict();
+const run = z
+  .object({
+    id: code,
+    workflowKey: code.nullable(),
+    status: code.nullable(),
+    currentStepKey: code.nullable(),
+    waitingReason: code.nullable(),
+    correlationId: code.nullable(),
+    createdAt: timestamp,
+    updatedAt: timestamp,
+    cost: cost.nullable(),
+  })
+  .strict();
+const humanAction = z
+  .object({
+    id: code,
+    actionType: code.nullable(),
+    status: code.nullable(),
+    priority: code.nullable(),
+    correlationId: code.nullable(),
+    workflowRunId: code.nullable(),
+    createdAt: timestamp,
+  })
+  .strict();
+const envelope = z
+  .object({
+    data: z
+      .object({
+        source: z.literal("ugotleads_operating_memory"),
+        scope: z.object({ subAccountId: code }).strict(),
+        sampling: z
+          .object({
+            bounded: z.literal(true),
+            capPerCollection: z.literal(100),
+            sampleLimited: z.boolean(),
+            noTotalClaims: z.literal(true),
+          })
+          .strict(),
+        runs: z.array(run).max(100),
+        humanActions: z.array(humanAction).max(100),
+      })
+      .strict(),
+  })
+  .strict();
 
 export function projectWorkspaceEvidence(input: unknown, mainId: string) {
   const { data } = envelope.parse(input);

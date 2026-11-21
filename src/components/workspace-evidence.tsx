@@ -4,33 +4,30 @@ import { useAuth } from "@/hooks/useAuth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getWorkspaceEvidence } from "@/lib/workspace-evidence.functions";
 import type { WorkspaceEvidence } from "@/lib/workspace-evidence.schema";
-
-function date(value: string) {
-  return new Date(value).toLocaleString();
-}
+import {
+  evidenceDate as date,
+  evidenceNumber,
+  evidenceKnownAmount,
+} from "@/lib/workspace-evidence.display";
 
 function Costs({ cost }: { cost: WorkspaceEvidence["runs"][number]["cost"] }) {
-  if (!cost)
-    return (
-      <p className="text-xs text-muted-foreground">AI cost: unknown · Capability cost: unknown</p>
-    );
   return (
     <dl className="grid gap-1 text-xs text-muted-foreground sm:grid-cols-2">
       <div>
         <dt>AI known cost (microcents)</dt>
-        <dd className="tabular-nums">{cost.aiKnownMicrocents.toLocaleString()}</dd>
+        <dd className="tabular-nums">{evidenceKnownAmount(cost?.aiKnownMicrocents)}</dd>
       </div>
       <div>
         <dt>AI runs with unknown cost</dt>
-        <dd>{cost.aiUnknownRuns}</dd>
+        <dd>{evidenceNumber(cost?.aiUnknownRuns)}</dd>
       </div>
       <div>
         <dt>Capability known cost (microcents)</dt>
-        <dd className="tabular-nums">{cost.capabilityKnownMicrocents.toLocaleString()}</dd>
+        <dd className="tabular-nums">{evidenceKnownAmount(cost?.capabilityKnownMicrocents)}</dd>
       </div>
       <div>
         <dt>Capability runs with unknown cost</dt>
-        <dd>{cost.capabilityUnknownRuns}</dd>
+        <dd>{evidenceNumber(cost?.capabilityUnknownRuns)}</dd>
       </div>
     </dl>
   );
@@ -105,8 +102,10 @@ export function WorkspaceEvidenceView() {
                   className="min-w-0 space-y-3 rounded-md border border-border bg-card p-4"
                 >
                   <div className="flex flex-wrap justify-between gap-2">
-                    <h4 className="break-all text-sm font-semibold">{run.workflowKey}</h4>
-                    <span className="break-all text-xs font-medium">{run.status}</span>
+                    <h4 className="break-all text-sm font-semibold">
+                      {run.workflowKey ?? "Unknown"}
+                    </h4>
+                    <span className="break-all text-xs font-medium">{run.status ?? "Unknown"}</span>
                   </div>
                   <dl className="grid gap-2 break-all text-xs sm:grid-cols-2">
                     <div>
@@ -115,15 +114,15 @@ export function WorkspaceEvidenceView() {
                     </div>
                     <div>
                       <dt className="text-muted-foreground">Correlation ID</dt>
-                      <dd>{run.correlationId ?? "—"}</dd>
+                      <dd>{run.correlationId ?? "Unknown"}</dd>
                     </div>
                     <div>
                       <dt className="text-muted-foreground">Current step</dt>
-                      <dd>{run.currentStepKey ?? "—"}</dd>
+                      <dd>{run.currentStepKey ?? "Unknown"}</dd>
                     </div>
                     <div>
                       <dt className="text-muted-foreground">Waiting code</dt>
-                      <dd>{run.waitingReason ?? "—"}</dd>
+                      <dd>{run.waitingReason ?? "Unknown"}</dd>
                     </div>
                     <div>
                       <dt className="text-muted-foreground">Created</dt>
@@ -151,9 +150,11 @@ export function WorkspaceEvidenceView() {
                   className="min-w-0 space-y-2 rounded-md border border-border bg-card p-4"
                 >
                   <div className="flex flex-wrap justify-between gap-2">
-                    <h4 className="break-all text-sm font-semibold">{action.actionType}</h4>
+                    <h4 className="break-all text-sm font-semibold">
+                      {action.actionType ?? "Unknown"}
+                    </h4>
                     <span className="break-all text-xs font-medium">
-                      {action.status} · {action.priority}
+                      {action.status ?? "Unknown"} · {action.priority ?? "Unknown"}
                     </span>
                   </div>
                   <dl className="grid gap-2 break-all text-xs sm:grid-cols-2">
@@ -163,11 +164,11 @@ export function WorkspaceEvidenceView() {
                     </div>
                     <div>
                       <dt className="text-muted-foreground">Correlation ID</dt>
-                      <dd>{action.correlationId ?? "—"}</dd>
+                      <dd>{action.correlationId ?? "Unknown"}</dd>
                     </div>
                     <div>
                       <dt className="text-muted-foreground">Workflow run ID</dt>
-                      <dd>{action.workflowRunId ?? "—"}</dd>
+                      <dd>{action.workflowRunId ?? "Unknown"}</dd>
                     </div>
                     <div>
                       <dt className="text-muted-foreground">Created</dt>

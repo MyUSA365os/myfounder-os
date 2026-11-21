@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { readWorkspaceEvidence } from "./workspace-evidence.server";
 import { projectWorkspaceEvidence } from "./workspace-evidence.schema";
+import { evidenceDate, evidenceNumber, evidenceKnownAmount } from "./workspace-evidence.display";
 
 const settings = { ownerUid: "founder-test", key: "test-only-key", mainId: "main-test" };
 function payload() {
@@ -21,8 +22,6 @@ function payload() {
         createdAt: time,
         updatedAt: time,
         cost: null,
-        email: "private@example.test",
-        reason: "private narrative",
       })),
       humanActions: Array.from({ length: 12 }, (_, i) => ({
         id: `action-${i}`,
@@ -32,7 +31,6 @@ function payload() {
         correlationId: "corr-test",
         workflowRunId: "run-0",
         createdAt: time,
-        recommendedAction: "private narrative",
       })),
     },
   };
@@ -139,7 +137,7 @@ describe("Founder-only workspace evidence", () => {
       { configured: true, available: false, reason: "unavailable" },
     );
   });
-  it("caps both collections to 10 and excludes unknown sensitive fields", () => {
+  it("caps both collections to 10", () => {
     const result = projectWorkspaceEvidence(payload(), settings.mainId);
     assert.equal(result.runs.length, 10);
     assert.equal(result.humanActions.length, 10);
@@ -180,5 +178,111 @@ describe("Founder-only workspace evidence", () => {
       settings.mainId,
     );
     assert.deepEqual(result.runs[0]?.cost, cost);
+  });
+  it("accepts all contract-permitted nulls and partially known costs without dropping rows", async () => {
+    const base = payload();
+    const nullRun = {
+      id: "historical-run",
+      workflowKey: null,
+      status: null,
+      currentStepKey: null,
+      waitingReason: null,
+      correlationId: null,
+      createdAt: null,
+      updatedAt: null,
+      cost: null,
+    };
+    const nullAction = {
+      id: "historical-action",
+      actionType: null,
+      status: null,
+      priority: null,
+      correlationId: null,
+      workflowRunId: null,
+      createdAt: null,
+    };
+    const partialCost = {
+      aiKnownMicrocents: null,
+      aiUnknownRuns: 2,
+      capabilityKnownMicrocents: 0,
+      capabilityUnknownRuns: null,
+    };
+    const body = {
+      data: {
+        ...base.data,
+        runs: [
+          nullRun,
+          { ...nullRun, id: "partial-run", cost: partialCost },
+          {
+            ...nullRun,
+            id: "null-cost-fields",
+            cost: {
+              aiKnownMicrocents: null,
+              aiUnknownRuns: null,
+              capabilityKnownMicrocents: null,
+              capabilityUnknownRuns: null,
+            },
+          },
+        ],
+        humanActions: [nullAction],
+      },
+    };
+    const projected = projectWorkspaceEvidence(body, settings.mainId);
+    assert.equal(projected.runs.length, 3);
+    assert.deepEqual(projected.runs[0], nullRun);
+    assert.deepEqual(projected.runs[1]?.cost, partialCost);
+    assert.deepEqual(projected.humanActions[0], nullAction);
+    assert.deepEqual(
+      await readWorkspaceEvidence(settings.ownerUid, settings, async () => Response.json(body)),
+      { configured: true, available: true, evidence: projected },
+    );
+    assert.equal(evidenceDate(projected.runs[0]?.createdAt ?? null), "Unknown");
+    assert.equal(
+      evidenceKnownAmount(projected.runs[1]?.cost?.aiKnownMicrocents),
+      "Known amount unavailable",
+    );
+    assert.equal(evidenceKnownAmount(projected.runs[1]?.cost?.capabilityKnownMicrocents), "0");
+    assert.equal(evidenceNumber(projected.runs[1]?.cost?.capabilityUnknownRuns), "Unknown");
+  });
+  it("never coerces absent dates or costs to epoch dates or zero", () => {
+    assert.equal(evidenceDate(null), "Unknown");
+    assert.equal(
+      evidenceDate("2026-11-21T17:34:00Z"),
+      new Date("2026-11-21T17:34:00Z").toLocaleString(),
+    );
+    assert.equal(evidenceNumber(null), "Unknown");
+    assert.equal(evidenceNumber(undefined), "Unknown");
+    assert.equal(evidenceNumber(0), "0");
+    assert.equal(evidenceKnownAmount(null), "Known amount unavailable");
+    assert.equal(evidenceKnownAmount(0), "0");
+  });
+  it("rejects unknown fields and PII/narratives in machine-code slots", () => {
+    const base = payload();
+    for (const override of [
+      { id: null },
+      { id: "person@example.test" },
+      { workflowKey: "Contact Steve now" },
+      { status: "person@example.test" },
+      { email: "person@example.test" },
+      { recommendedAction: "Send mail" },
+    ]) {
+      assert.throws(() =>
+        projectWorkspaceEvidence(
+          { data: { ...base.data, runs: [{ ...base.data.runs[0], ...override }] } },
+          settings.mainId,
+        ),
+      );
+    }
+    assert.throws(() =>
+      projectWorkspaceEvidence(
+        {
+          data: {
+            ...base.data,
+            humanActions: [{ ...base.data.humanActions[0], actionType: "person@example.test" }],
+          },
+        },
+        settings.mainId,
+      ),
+    );
   });
 });
