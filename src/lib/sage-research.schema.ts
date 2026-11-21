@@ -30,8 +30,6 @@ const website = z
         ["http:", "https:"].includes(url.protocol) &&
         !url.username &&
         !url.password &&
-        !url.search &&
-        !url.hash &&
         !/[\s\\]/.test(value) &&
         !!url.hostname
       );
@@ -39,6 +37,8 @@ const website = z
       return false;
     }
   })
+  // Omit the entire optional website if it could carry private query or fragment data.
+  .transform((value) => (/[?#]/.test(value) ? null : value))
   .nullish()
   .transform((value) => value ?? null);
 const item = z

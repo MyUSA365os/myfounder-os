@@ -181,11 +181,26 @@ describe("Business-safe research projection", () => {
       "file:///secret",
       "https://user:password@acme.invalid",
       "not a url",
-      "https://acme.invalid?email=private",
-      "https://acme.invalid/#secret",
     ]) {
       assert.throws(() => projectSageResearch(payload([{ ...record, website }]), settings.mainId));
     }
+  });
+
+  it("omits websites with a query or fragment without discarding the bounded report", () => {
+    const report = projectSageResearch(
+      payload([
+        { ...record, prospectId: "prospect-query", website: "https://acme.invalid?email=private" },
+        { ...record, prospectId: "prospect-fragment", website: "https://acme.invalid/#secret" },
+        record,
+      ]),
+      settings.mainId,
+    );
+
+    assert.equal(report.excludedCount, 0);
+    assert.deepEqual(
+      report.items.map((item) => item.website),
+      [null, null, record.website],
+    );
   });
   it("excludes explicit QA/synthetic/test/demo/example records and returns sample count", () => {
     const items = [
