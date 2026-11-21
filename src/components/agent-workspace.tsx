@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { WorkspaceEvidenceView } from "@/components/workspace-evidence";
+import { SageResearchPilot } from "@/components/sage-research-pilot";
 import {
   AGENT_WORKSPACE_LINKS as links,
   AGENT_WORKSPACE_POLICY as policy,
@@ -196,6 +197,7 @@ export function AgentWorkspace() {
       </section>
 
       <WorkspaceEvidenceView />
+      <SageResearchPilot />
 
       <section aria-labelledby="workforce" className="space-y-4 border-t border-border pt-6">
         <div>

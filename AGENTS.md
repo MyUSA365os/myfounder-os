@@ -1,4 +1,5 @@
 # Architecture rules
+- Sage prospect reviews use an owner-click mutation and dedicated founder-authorized server-only Main GET helper with stripped business-safe output; no render requests or workflow creation, so preview cannot activate agents or cross tenants.
 - Agent Workspace keeps setup static and loads operating evidence only through authenticated server functions with exact configured founder UID authorization; campaign reporting stays unmounted because sign-in alone does not authorize client data.
 - Operating evidence uses a server-only read helper, dedicated Main-scoped configuration, strict safe-field projection and no retries or polling so draft services fail closed without tenant fallbacks.
 - Operating evidence accepts explicit contract nulls but rejects unknown fields and narrative codes; shared display formatters preserve unknown dates/costs instead of coercing them to epoch dates or zero.

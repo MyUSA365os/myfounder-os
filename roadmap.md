@@ -1,4 +1,7 @@
 # Agent Workspace V0
+- [x] Add owner-click Main prospect review with safe projection and no automatic requests.
+- [x] Verify research authorization, nulls, QA exclusions, suppression and transport: 31 new tests (60 focused tests total), focused lint and automatic preview compilation passed; signed-out redirect and isolated desktop/mobile keyboard click states passed without production calls.
+- Research pilot live verification is blocked by the unissued dedicated Main research key and required explicit founder/Main configuration; no authenticated real-data review was attempted.
 - [x] Add founder-only operating evidence, strict safe projection, bounded reads and truthful unavailable states.
 - [x] Run security tests, focused lint and authenticated desktop/mobile fail-closed preview checks without live operations or publishing.
 - [x] Add read-only setup console and navigation using existing sign-in protection.
