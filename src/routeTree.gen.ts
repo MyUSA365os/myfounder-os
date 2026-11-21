@@ -18,6 +18,7 @@ import { Route as InboundRouteImport } from './routes/inbound'
 import { Route as EmailConnectionsRouteImport } from './routes/email-connections'
 import { Route as ContentRouteImport } from './routes/content'
 import { Route as ComplianceRouteImport } from './routes/compliance'
+import { Route as AgentWorkspaceRouteImport } from './routes/agent-workspace'
 import { Route as IndexRouteImport } from './routes/index'
 
 const RevenueRoute = RevenueRouteImport.update({
@@ -65,6 +66,11 @@ const ComplianceRoute = ComplianceRouteImport.update({
   path: '/compliance',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AgentWorkspaceRoute = AgentWorkspaceRouteImport.update({
+  id: '/agent-workspace',
+  path: '/agent-workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -73,6 +79,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/agent-workspace': typeof AgentWorkspaceRoute
   '/compliance': typeof ComplianceRoute
   '/content': typeof ContentRoute
   '/email-connections': typeof EmailConnectionsRoute
@@ -85,6 +92,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/agent-workspace': typeof AgentWorkspaceRoute
   '/compliance': typeof ComplianceRoute
   '/content': typeof ContentRoute
   '/email-connections': typeof EmailConnectionsRoute
@@ -98,6 +106,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/agent-workspace': typeof AgentWorkspaceRoute
   '/compliance': typeof ComplianceRoute
   '/content': typeof ContentRoute
   '/email-connections': typeof EmailConnectionsRoute
@@ -112,6 +121,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/agent-workspace'
     | '/compliance'
     | '/content'
     | '/email-connections'
@@ -124,6 +134,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/agent-workspace'
     | '/compliance'
     | '/content'
     | '/email-connections'
@@ -136,6 +147,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/agent-workspace'
     | '/compliance'
     | '/content'
     | '/email-connections'
@@ -149,6 +161,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AgentWorkspaceRoute: typeof AgentWorkspaceRoute
   ComplianceRoute: typeof ComplianceRoute
   ContentRoute: typeof ContentRoute
   EmailConnectionsRoute: typeof EmailConnectionsRoute
@@ -225,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ComplianceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/agent-workspace': {
+      id: '/agent-workspace'
+      path: '/agent-workspace'
+      fullPath: '/agent-workspace'
+      preLoaderRoute: typeof AgentWorkspaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -237,6 +257,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AgentWorkspaceRoute: AgentWorkspaceRoute,
   ComplianceRoute: ComplianceRoute,
   ContentRoute: ContentRoute,
   EmailConnectionsRoute: EmailConnectionsRoute,

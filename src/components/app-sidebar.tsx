@@ -10,6 +10,7 @@ import {
   Activity,
   Mail,
   LogOut,
+  Bot,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
@@ -18,6 +19,7 @@ import { Button } from "@/components/ui/button";
 
 const primary = [
   { title: "Revenue", url: "/revenue", icon: TrendingUp },
+  { title: "Agent Workspace", url: "/agent-workspace", icon: Bot },
   { title: "Outreach", url: "/outreach", icon: Send },
   { title: "Compliance", url: "/compliance", icon: ShieldCheck },
 ];
