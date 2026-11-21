@@ -75,7 +75,7 @@ export function WorkspaceEvidenceView() {
         ) : !data.available ? (
           <p className="text-sm text-muted-foreground">
             {data.reason === "pending_release"
-              ? "Backend pending. The draft evidence service is not released in production yet."
+              ? "The configured evidence endpoint could not be reached."
               : "Service unavailable. No verified operating evidence is available right now."}
           </p>
         ) : (

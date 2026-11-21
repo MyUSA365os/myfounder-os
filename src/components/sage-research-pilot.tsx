@@ -11,7 +11,7 @@ export function SageResearchReportView({ report }: { report: SageResearchReport 
     <div className="space-y-4">
       <p className="text-xs text-muted-foreground">
         Returned sample only · up to 10 Main prospects, not an exhaustive CRM search.{" "}
-        {report.excludedCount} explicitly QA/synthetic/test/demo/example records excluded.
+        {report.excludedCount} records excluded by the review filters.
       </p>
       {report.items.length === 0 && (
         <p className="text-sm text-muted-foreground">
