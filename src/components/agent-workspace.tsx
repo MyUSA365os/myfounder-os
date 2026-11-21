@@ -14,6 +14,8 @@ import { WorkspaceEvidenceView } from "@/components/workspace-evidence";
 import {
   AGENT_WORKSPACE_LINKS as links,
   AGENT_WORKSPACE_POLICY as policy,
+  AGENT_WORKSPACE_STAGES as stages,
+  AGENT_WORKSPACE_MILESTONES as milestones,
 } from "@/lib/agent-workspace";
 
 function ExternalLink({ href, children }: { href: string; children: React.ReactNode }) {
@@ -43,8 +45,9 @@ const workforce = [
   {
     name: "Sage Revenue Research",
     icon: ShieldCheck,
-    state: "Blocked",
-    detail: "Worker configured in Boost; authenticated CRM MCP not connected.",
+    state: "Not verified",
+    detail:
+      "Worker configured in Boost; authenticated CRM MCP not connected. A dedicated isolated worker is the primary path; Boost is optional later.",
   },
   {
     name: "Desktop Worker",
@@ -81,13 +84,25 @@ export function AgentWorkspace() {
         <dl className="grid grid-cols-1 gap-4 border-y border-border py-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
             {
-              label: "Ready to review",
-              detail: "Implementation issue and runbook",
+              label: "Preview built",
+              detail: "V0 interface and founder-only reader",
               icon: CheckCircle2,
             },
-            { label: "Blocked", detail: "Boost permission scope unconfirmed", icon: LockKeyhole },
-            { label: "Waiting on connection", detail: "Authenticated CRM MCP", icon: Clock3 },
-            { label: "Never run", detail: "Stage 1 pilot from this workspace", icon: CircleDashed },
+            {
+              label: "Review required",
+              detail: "PR #249 open / draft; not released",
+              icon: LockKeyhole,
+            },
+            {
+              label: "Not connected",
+              detail: "Server-only Main credential configuration",
+              icon: Clock3,
+            },
+            {
+              label: "Not verified",
+              detail: "Real evidence and first isolated run",
+              icon: CircleDashed,
+            },
           ].map(({ label, detail, icon: Icon }) => (
             <div key={label} className="min-w-0">
               <dt className="flex items-center gap-2 text-sm font-semibold">
@@ -110,16 +125,24 @@ export function AgentWorkspace() {
           </h2>
           <span className="inline-flex items-center gap-1.5 rounded-md bg-warning/20 px-2 py-1 text-xs font-medium text-foreground">
             <LockKeyhole className="h-3.5 w-3.5" aria-hidden="true" />
-            Blocked
+            Review required · not released
           </span>
         </div>
         <p className="text-sm font-medium">
-          Stage 1 · {policy.environment}-only read-only CRM research pilot
+          Stage 1 · {policy.environment}-only read-only operating evidence
         </p>
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
-          Up to {policy.contactLimit} real non-QA contacts/prospects. Boost.space must confirm that
-          a newly connected external MCP server can be limited to ONLY Sage Revenue Research before
-          any bearer key is submitted. No key has been submitted from this workspace.
+          Ship the existing uGotLeads evidence endpoint in draft PR #249, configure the server-only
+          founder UID and Main-only reports:read credential, then verify actual evidence and
+          negative permission tests. The endpoint is not released; configuration is not connected
+          and real evidence is not verified.
+        </p>
+        <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
+          Boost.space support confirmed on November 21 that external MCP connections initially reach
+          ALL agents, including across instances, before admin reassignment. There is no per-agent
+          selection before submitting a key; a separate instance does not isolate. We will not wait
+          for that feature or submit a production CRM key to Boost. An isolated Sage worker with
+          tenant-bound scoped keys is the primary path; Boost is optional later.
         </p>
         <div className="flex flex-wrap gap-2">
           <ExternalLink href={links.issue}>Open implementation issue</ExternalLink>
@@ -135,22 +158,9 @@ export function AgentWorkspace() {
         <p className="text-sm text-muted-foreground">
           No agent work is executed from this workspace.
         </p>
-        <h3 className="text-sm font-semibold">Setup checkpoints (not executed tasks)</h3>
+        <h3 className="text-sm font-semibold">Planned stages (not executed tasks)</h3>
         <ol className="space-y-3">
-          {[
-            [
-              "Resolve Boost permission blocker",
-              "Confirm external MCP access is restricted to ONLY Sage Revenue Research before submitting a bearer key.",
-            ],
-            [
-              "Main-only smoke test",
-              "After permission confirmation and an approved connection, review read-only research on up to 10 real non-QA contacts/prospects.",
-            ],
-            [
-              "Windows desktop worker",
-              "After the CRM pilot, verify the Windows desktop deployment and its permission boundaries.",
-            ],
-          ].map(([title, detail], index) => (
+          {stages.map(({ title, detail }, index) => (
             <li key={title} className="flex gap-3">
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-medium text-muted-foreground">
                 {index + 1}
@@ -159,6 +169,22 @@ export function AgentWorkspace() {
                 <p className="text-sm font-medium">{title}</p>
                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{detail}</p>
               </div>
+            </li>
+          ))}
+        </ol>
+        <h3 className="text-sm font-semibold">5 V1 milestones</h3>
+        <p className="text-xs text-muted-foreground">
+          Setup checklist only · not completed milestones or live work statuses. Preview built
+          describes source only, not a verified connection or execution.
+        </p>
+        <ol className="divide-y divide-border border-y border-border">
+          {milestones.map(({ title, state, detail }) => (
+            <li key={title} className="space-y-1 py-3">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <h4 className="text-sm font-medium">{title}</h4>
+                <span className="text-xs font-semibold text-muted-foreground">{state}</span>
+              </div>
+              <p className="text-xs leading-relaxed text-muted-foreground">{detail}</p>
             </li>
           ))}
         </ol>
@@ -202,6 +228,23 @@ export function AgentWorkspace() {
         <div className="flex flex-wrap gap-2">
           <ExternalLink href={links.desktop}>Vercel Labs agent-desktop</ExternalLink>
           <ExternalLink href={links.inventory}>Google workforce inventory</ExternalLink>
+        </div>
+      </section>
+
+      <section
+        aria-labelledby="future-capabilities"
+        className="space-y-3 border-t border-border pt-6"
+      >
+        <h2 id="future-capabilities" className="text-lg font-semibold">
+          Later capabilities · outside V1
+        </h2>
+        <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
+          Cards, phone and social avatar are later autonomies, not prerequisites to workspace V1.
+          Video marketing is a parallel future capability, not a V1 blocker or scope change.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <ExternalLink href={links.executiveFuture}>Autonomous executive future #250</ExternalLink>
+          <ExternalLink href={links.videoContext}>Parallel video context #252</ExternalLink>
         </div>
       </section>
 

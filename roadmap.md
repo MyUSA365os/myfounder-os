@@ -5,7 +5,8 @@
 - [x] Withhold campaign data pending founder-only server authorization.
 - [x] Run focused tests, lint, signed-out guard and isolated desktop/mobile rendering checks; never publish or perform live operations.
 - Live evidence remains blocked by missing explicit founder/read-only Main configuration and the unshipped draft endpoint; only fail-closed access was verified against the real preview.
-- Pilot execution blocked by Boost external MCP permission confirmation; campaign embedding blocked by founder-only server authorization.
+- [x] Correct the operator roadmap to isolated Sage, five explicitly unverified V1 milestones and parallel future capabilities; 29 focused tests, focused lint and automatic preview build passed; isolated desktop/mobile layout and keyboard checks passed without evidence requests.
+- Pilot execution requires an isolated tenant-bound Sage worker, not Boost-wide MCP; campaign embedding remains blocked by founder-only server authorization.
 
 # Email Connections foundation
 - [x] Verify applied configuration schema and repair inherited permissions without duplicating the foundation migration.
