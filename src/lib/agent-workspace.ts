@@ -20,19 +20,19 @@ export const AGENT_WORKSPACE_ISOLATION = Object.freeze({
 
 export const AGENT_WORKSPACE_STAGES = [
   {
-    title: "Release and verify operating evidence",
+    title: "Configure and verify released operating evidence",
     detail:
-      "Ship the existing uGotLeads read-only evidence endpoint from draft PR #249 (not released). Configure server-only founder UID and a Main-only reports:read credential. Verify actual evidence and negative permission tests.",
+      "Evidence API released in PR #255; owner-only key controls released in PR #257. Securely configure the founder UID, Main tenant and separate Main-only reports:read key in Founder HQ. Actual Main evidence and negative permission checks remain unverified.",
   },
   {
-    title: "One isolated Sage Revenue Research worker",
+    title: "Owner-click Main prospect review",
     detail:
-      "Use a dedicated isolated worker / server-side read-only connector, not Boost-wide MCP. Bind its key to Main with contacts:read, forms:read and prospects:read only; no write scopes. Research up to 10 non-QA records and verify the report against CRM. No client contacting.",
+      "The direct read-only Sage Research Pilot exists in preview source only. Configure its separate Main-only contacts:read, forms:read and prospects:read key. No authorized data has been pulled or 10-prospect report produced; this is not an OS workflow run. No client contacting or shared Boost AgentOS.",
   },
   {
     title: "Real Ask Sage requests and controls",
     detail:
-      "Connect an actual job-request UI to canonical workflow status and approval reporting, with meaningful stop/revoke. No request button until the backend truly exists.",
+      "Durable request-run-approval-stop worker flow is not built. No canonical workflow run has been executed from this workspace. Add meaningful approval and stop/revoke only with an approved worker backend; direct prospect review does not create a workflow run.",
   },
   {
     title: "Isolated Windows desktop / RTILA worker",
@@ -43,35 +43,41 @@ export const AGENT_WORKSPACE_STAGES = [
 
 export const AGENT_WORKSPACE_MILESTONES = [
   {
-    title: "V0 interface and founder-only reader",
-    state: "PREVIEW BUILT",
-    detail: "Source implementation only; not evidence of a production connection or run.",
+    title: "Evidence backend · PR #255",
+    state: "RELEASED",
+    detail:
+      "Verified November 21, 2026: live on app.ugotleads.io, commit aede766d…; tests/lint/typecheck green, Vercel READY and custom domain verified. Release is not evidence of a Founder HQ connection.",
   },
   {
-    title: "Evidence endpoint · PR #249",
-    state: "REVIEW REQUIRED",
-    detail: "Open / draft; not released.",
+    title: "Owner-only key panel · PR #257",
+    state: "RELEASED",
+    detail:
+      "Verified November 21, 2026: live on app.ugotleads.io, commit d96a82f…; Vercel READY and domain verified. Separate Main-only evidence and research key controls and legacy Boost MCP pause are released; neither key was created by deployment.",
   },
   {
-    title: "Server-only founder UID and Main credential",
+    title: "Founder HQ dedicated server secrets",
     state: "NOT CONNECTED",
-    detail: "Dedicated Main-only reports:read configuration; never reuse a client-scoped key.",
+    detail:
+      "No private settings configured. Founder UID and Main tenant must be securely configured with two separately scoped keys; never reuse a client-scoped or shared Boost key.",
   },
   {
-    title: "Real evidence and negative permission tests",
+    title: "Actual Main evidence and read pilot",
     state: "NOT VERIFIED",
     detail:
-      "Verify actual evidence and denied access for non-founder accounts and wrong tenant/scope.",
+      "No authorized data pulled, no 10-prospect report produced. Founder HQ readers are preview source only, not published; 60 focused preview tests passed, not a live Main verification.",
   },
   {
-    title: "First isolated Sage research run",
-    state: "NOT VERIFIED",
+    title: "Durable request-run-approval-stop worker flow",
+    state: "NOT BUILT",
     detail:
-      "Up to 10 non-QA Main records, read-only scopes, CRM-verified report and no client contacting.",
+      "No canonical workflow run executed. Direct read-only prospect review is not an agent run, worker execution or approval/stop flow.",
   },
 ] as const;
 
 export const AGENT_WORKSPACE_LINKS = Object.freeze({
+  agencySettings: "https://app.ugotleads.io/agency/settings",
+  evidenceRelease: "https://github.com/ownyourmarket/ugotleads/pull/255",
+  keyControlsRelease: "https://github.com/ownyourmarket/ugotleads/pull/257",
   issue: "https://github.com/ownyourmarket/ugotleads/issues/247",
   evidencePr: "https://github.com/ownyourmarket/ugotleads/pull/249",
   executiveFuture: "https://github.com/ownyourmarket/ugotleads/issues/250",

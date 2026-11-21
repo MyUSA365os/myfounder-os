@@ -74,7 +74,7 @@ export function AgentWorkspace() {
           </h2>
           <span className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
             <LockKeyhole className="h-4 w-4" aria-hidden="true" />
-            Read-only · V0
+            Read-only · preview source only
           </span>
         </div>
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
@@ -85,14 +85,14 @@ export function AgentWorkspace() {
         <dl className="grid grid-cols-1 gap-4 border-y border-border py-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
             {
-              label: "Preview built",
-              detail: "V0 interface and founder-only reader",
+              label: "Evidence backend released",
+              detail: "PR #255 · uGotLeads production",
               icon: CheckCircle2,
             },
             {
-              label: "Review required",
-              detail: "PR #249 open / draft; not released",
-              icon: LockKeyhole,
+              label: "Owner-only key panel released",
+              detail: "PR #257 · separate Main-only key controls",
+              icon: CheckCircle2,
             },
             {
               label: "Not connected",
@@ -101,8 +101,13 @@ export function AgentWorkspace() {
             },
             {
               label: "Not verified",
-              detail: "Real evidence and first isolated run",
+              detail: "Actual Main evidence and direct read pilot",
               icon: CircleDashed,
+            },
+            {
+              label: "Not built",
+              detail: "Durable request-run-approval-stop worker flow",
+              icon: LockKeyhole,
             },
           ].map(({ label, detail, icon: Icon }) => (
             <div key={label} className="min-w-0">
@@ -126,18 +131,40 @@ export function AgentWorkspace() {
           </h2>
           <span className="inline-flex items-center gap-1.5 rounded-md bg-warning/20 px-2 py-1 text-xs font-medium text-foreground">
             <LockKeyhole className="h-3.5 w-3.5" aria-hidden="true" />
-            Review required · not released
+            Private settings not connected
           </span>
         </div>
         <p className="text-sm font-medium">
           Stage 1 · {policy.environment}-only read-only operating evidence
         </p>
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
-          Ship the existing uGotLeads evidence endpoint in draft PR #249, configure the server-only
-          founder UID and Main-only reports:read credential, then verify actual evidence and
-          negative permission tests. The endpoint is not released; configuration is not connected
-          and real evidence is not verified.
+          uGotLeads evidence API (PR #255) and owner-only key controls (PR #257) are released.
+          Founder HQ remains preview source only: no private settings configured, no authorized Main
+          data pulled and no read pilot verified. The direct prospect review below is not a recorded
+          OS workflow run; no canonical workflow run has been executed.
         </p>
+        <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
+          Owner issues two separately scoped keys and stores directly in private Founder HQ secrets.
+          Never paste keys in chat or Boost.space. Founder HQ Evidence uses reports:read; Sage
+          Isolated Research uses contacts:read, forms:read and prospects:read. Both are Main-only;
+          neither key was created by deployment. Securely configure Main and the founder UID; do not
+          infer either from a browser account or substitute an owner ID.
+        </p>
+        <dl className="space-y-2 break-all text-xs">
+          <dt className="font-semibold">Private configuration names (names only)</dt>
+          <dd>
+            <code>FOUNDER_HQ_OWNER_UID</code>
+          </dd>
+          <dd>
+            <code>UGOTLEADS_MAIN_SUB_ACCOUNT_ID</code>
+          </dd>
+          <dd>
+            <code>UGOTLEADS_WORKSPACE_READONLY_KEY</code>
+          </dd>
+          <dd>
+            <code>UGOTLEADS_SAGE_RESEARCH_READONLY_KEY</code>
+          </dd>
+        </dl>
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
           Boost.space support confirmed on November 21 that external MCP connections initially reach
           ALL agents, including across instances, before admin reassignment. There is no per-agent
@@ -148,7 +175,10 @@ export function AgentWorkspace() {
         <div className="flex flex-wrap gap-2">
           <ExternalLink href={links.issue}>Open implementation issue</ExternalLink>
           <ExternalLink href={links.runbook}>Pilot runbook</ExternalLink>
-          <ExternalLink href={links.evidencePr}>Draft evidence PR #249</ExternalLink>
+          <ExternalLink href={links.agencySettings}>Open uGotLeads Agency Settings</ExternalLink>
+          <ExternalLink href={links.evidenceRelease}>Evidence release PR #255</ExternalLink>
+          <ExternalLink href={links.keyControlsRelease}>Key controls release PR #257</ExternalLink>
+          <ExternalLink href={links.evidencePr}>Evidence implementation PR #249</ExternalLink>
         </div>
       </section>
 
@@ -175,8 +205,9 @@ export function AgentWorkspace() {
         </ol>
         <h3 className="text-sm font-semibold">5 V1 milestones</h3>
         <p className="text-xs text-muted-foreground">
-          Setup checklist only · not completed milestones or live work statuses. Preview built
-          describes source only, not a verified connection or execution.
+          Static release and setup checklist · verified November 21, 2026, not live telemetry.
+          Released uGotLeads services do not imply Founder HQ configuration, a successful read or
+          worker execution. Founder HQ source is not published.
         </p>
         <ol className="divide-y divide-border border-y border-border">
           {milestones.map(({ title, state, detail }) => (
