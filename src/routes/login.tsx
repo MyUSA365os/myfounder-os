@@ -5,22 +5,25 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordRecovery } from "@/components/password-recovery";
 
-type LoginSearch = { redirect?: string };
+type LoginSearch = { redirect?: string; recovery?: string };
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Sign in — Founder OS" }] }),
   validateSearch: (search): LoginSearch => ({
     redirect: typeof search.redirect === "string" ? search.redirect : undefined,
+    recovery: search.recovery === 1 || search.recovery === "1" ? "1" : undefined,
   }),
   component: LoginPage,
 });
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { redirect } = Route.useSearch();
-  const { signInWithEmail, session } = useAuth();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const { redirect, recovery } = Route.useSearch();
+  const fromRecoveryLink = recovery === "1";
+  const { signInWithEmail, session, isLoading, isRecovering, finishRecovery } = useAuth();
+  const [mode, setMode] = useState<"signin" | "signup" | "recover">("signin");
   const [signupAllowed, setSignupAllowed] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,17 +33,33 @@ function LoginPage() {
 
   useEffect(() => {
     let active = true;
-    supabase
-      .rpc("signup_allowed")
-      .then(({ data }) => {
-        if (active) setSignupAllowed(data === true);
-      });
+    supabase.rpc("signup_allowed").then(({ data }) => {
+      if (active) setSignupAllowed(data === true);
+    });
     return () => {
       active = false;
     };
   }, []);
 
-  // Already signed in — bounce to the originally requested route or /revenue
+  if (mode === "recover" || fromRecoveryLink || isRecovering) {
+    return (
+      <PasswordRecovery
+        key={isRecovering ? "set-password" : "request-link"}
+        email={email}
+        canSetPassword={isRecovering}
+        loading={isLoading}
+        fromRecoveryLink={fromRecoveryLink}
+        onReturn={() => {
+          finishRecovery();
+          setMode("signin");
+          setError(null);
+          navigate({ to: "/login", search: { redirect }, replace: true });
+        }}
+      />
+    );
+  }
+
+  // Continue to the requested page after normal sign-in.
   if (session) {
     navigate({ to: redirect ?? "/revenue" });
     return null;
@@ -77,7 +96,6 @@ function LoginPage() {
     }
   }
 
-
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-background p-6">
       <div className="w-full max-w-sm">
@@ -90,7 +108,10 @@ function LoginPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-border bg-card p-6">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4 rounded-lg border border-border bg-card p-6"
+        >
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -148,6 +169,21 @@ function LoginPage() {
                 : "Sign in"}
           </Button>
 
+          {mode === "signin" && (
+            <Button
+              type="button"
+              variant="link"
+              className="w-full"
+              onClick={() => {
+                setPassword("");
+                setError(null);
+                setMode("recover");
+              }}
+            >
+              Forgot your password?
+            </Button>
+          )}
+
           {signupAllowed && (
             <button
               type="button"
@@ -170,8 +206,6 @@ function LoginPage() {
             ? "One-time setup: the first account created becomes the workspace owner. After that, access is invite-only."
             : "Access is invite-only. Ask your workspace owner to create your account."}
         </p>
-
-
       </div>
     </div>
   );
