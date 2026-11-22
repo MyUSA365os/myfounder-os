@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RevenueRouteImport } from './routes/revenue'
 import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as OutreachRouteImport } from './routes/outreach'
+import { Route as MediaPrRouteImport } from './routes/media-pr'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LocalGrowthRouteImport } from './routes/local-growth'
 import { Route as InboundRouteImport } from './routes/inbound'
@@ -34,6 +35,11 @@ const PartnersRoute = PartnersRouteImport.update({
 const OutreachRoute = OutreachRouteImport.update({
   id: '/outreach',
   path: '/outreach',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MediaPrRoute = MediaPrRouteImport.update({
+  id: '/media-pr',
+  path: '/media-pr',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/inbound': typeof InboundRoute
   '/local-growth': typeof LocalGrowthRoute
   '/login': typeof LoginRoute
+  '/media-pr': typeof MediaPrRoute
   '/outreach': typeof OutreachRoute
   '/partners': typeof PartnersRoute
   '/revenue': typeof RevenueRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/inbound': typeof InboundRoute
   '/local-growth': typeof LocalGrowthRoute
   '/login': typeof LoginRoute
+  '/media-pr': typeof MediaPrRoute
   '/outreach': typeof OutreachRoute
   '/partners': typeof PartnersRoute
   '/revenue': typeof RevenueRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/inbound': typeof InboundRoute
   '/local-growth': typeof LocalGrowthRoute
   '/login': typeof LoginRoute
+  '/media-pr': typeof MediaPrRoute
   '/outreach': typeof OutreachRoute
   '/partners': typeof PartnersRoute
   '/revenue': typeof RevenueRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/inbound'
     | '/local-growth'
     | '/login'
+    | '/media-pr'
     | '/outreach'
     | '/partners'
     | '/revenue'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/inbound'
     | '/local-growth'
     | '/login'
+    | '/media-pr'
     | '/outreach'
     | '/partners'
     | '/revenue'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/inbound'
     | '/local-growth'
     | '/login'
+    | '/media-pr'
     | '/outreach'
     | '/partners'
     | '/revenue'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   InboundRoute: typeof InboundRoute
   LocalGrowthRoute: typeof LocalGrowthRoute
   LoginRoute: typeof LoginRoute
+  MediaPrRoute: typeof MediaPrRoute
   OutreachRoute: typeof OutreachRoute
   PartnersRoute: typeof PartnersRoute
   RevenueRoute: typeof RevenueRoute
@@ -194,6 +207,13 @@ declare module '@tanstack/react-router' {
       path: '/outreach'
       fullPath: '/outreach'
       preLoaderRoute: typeof OutreachRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/media-pr': {
+      id: '/media-pr'
+      path: '/media-pr'
+      fullPath: '/media-pr'
+      preLoaderRoute: typeof MediaPrRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   InboundRoute: InboundRoute,
   LocalGrowthRoute: LocalGrowthRoute,
   LoginRoute: LoginRoute,
+  MediaPrRoute: MediaPrRoute,
   OutreachRoute: OutreachRoute,
   PartnersRoute: PartnersRoute,
   RevenueRoute: RevenueRoute,

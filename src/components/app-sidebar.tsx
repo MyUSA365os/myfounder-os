@@ -4,6 +4,7 @@ import {
   Send,
   ShieldCheck,
   FileText,
+  Newspaper,
   Inbox,
   MapPin,
   Users,
@@ -25,6 +26,7 @@ const primary = [
 ];
 
 const secondary = [
+  { title: "Media & PR", url: "/media-pr", icon: Newspaper },
   { title: "Content", url: "/content", icon: FileText },
   { title: "Inbound", url: "/inbound", icon: Inbox },
   { title: "Local Growth", url: "/local-growth", icon: MapPin },
