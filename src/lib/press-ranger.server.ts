@@ -10,16 +10,20 @@ class PressRangerProbeError extends Error {
   }
 }
 
-async function inspectCapabilities(token: string) {
+export async function inspectCapabilities(token: string, request: typeof fetch = fetch) {
   const client = new Client({ name: "MyUSA Sage PR", version: "1.0.0" });
   let lastStatus: number | undefined;
   let step: "initialization" | "capability lookup" = "initialization";
   const transport = new StreamableHTTPClientTransport(new URL("https://pressranger.com/mcp"), {
-    requestInit: { headers: { Authorization: `Bearer ${token}` }, redirect: "error" },
+    requestInit: { headers: { Authorization: `Bearer ${token}` }, redirect: "manual" },
     fetch: async (input, init) => {
       // Use the SDK's abort signal. The request timeout below covers each MCP call.
-      const response = await fetch(input, init);
+      const response = await request(input, { ...init, redirect: "manual" });
       if (init?.method === "POST") lastStatus = response.status;
+      if (response.status >= 300 && response.status < 400) {
+        await response.body?.cancel();
+        throw new Error("Press Ranger redirected the request");
+      }
       return response;
     },
   });
