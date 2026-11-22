@@ -1,3 +1,4 @@
+import type { MediaRecord, MediaStage } from "@/lib/media-pr";
 /**
  * Supabase database types — Founder Revenue OS v2
  * Project: lqgdiuovlutugreuzqkl
@@ -20,6 +21,18 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      media_pr_audit: {
+        Row: { id: number; workspace_id: string; actor_id: string; record_id: string | null; action: string; occurred_at: string }
+        Insert: { workspace_id: string; actor_id: string; action: "mcp_probe" }
+        Update: Record<string, never>
+        Relationships: []
+      }
+      media_pr_records: {
+        Row: MediaRecord
+        Insert: Omit<MediaRecord, "id" | "created_at" | "stage"> & { stage?: MediaStage }
+        Update: { stage?: MediaStage }
+        Relationships: []
+      }
       profiles: {
         Row: {
           id: string
@@ -328,5 +341,13 @@ export interface Database {
     }
     Enums: Record<string, never>
     CompositeTypes: Record<string, never>
+  }
+}
+
+export type MediaDatabase = {
+  public: {
+    Tables: Pick<Database["public"]["Tables"], "media_pr_records" | "media_pr_audit">
+    Views: Record<never, never>
+    Functions: Record<never, never>
   }
 }
