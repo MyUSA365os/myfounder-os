@@ -4,23 +4,38 @@ import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/
 type PressRangerConfig = { ownerUid?: string; token?: string };
 type Probe = (token: string) => Promise<void>;
 
+class PressRangerProbeError extends Error {
+  constructor(readonly diagnosis: string) {
+    super("Press Ranger connection check failed");
+  }
+}
+
 async function inspectCapabilities(token: string) {
   const client = new Client({ name: "MyUSA Sage PR", version: "1.0.0" });
+  let lastStatus: number | undefined;
+  let step: "initialization" | "capability lookup" = "initialization";
   const transport = new StreamableHTTPClientTransport(new URL("https://pressranger.com/mcp"), {
     requestInit: { headers: { Authorization: `Bearer ${token}` }, redirect: "error" },
-    fetch: (input, init) =>
-      fetch(input, {
-        ...init,
-        signal: init?.signal
-          ? AbortSignal.any([init.signal, AbortSignal.timeout(8_000)])
-          : AbortSignal.timeout(8_000),
-      }),
+    fetch: async (input, init) => {
+      // Use the SDK's abort signal. The request timeout below covers each MCP call.
+      const response = await fetch(input, init);
+      if (init?.method === "POST") lastStatus = response.status;
+      return response;
+    },
   });
   try {
     await client.connect(transport, { timeout: 8_000 });
+    step = "capability lookup";
+    lastStatus = undefined;
     await client.listTools(undefined, { timeout: 8_000 });
+  } catch (error) {
+    const status = lastStatus !== undefined ? `HTTP ${lastStatus}` : "no HTTP response";
+    const timedOut = error instanceof Error && /timed?\s*out|timeout/i.test(error.message);
+    const transportError = error instanceof TypeError && lastStatus === undefined;
+    const detail = timedOut ? "timeout" : transportError ? "network error" : status;
+    throw new PressRangerProbeError(`Press Ranger ${step}: ${detail}.`);
   } finally {
-    await client.close();
+    await client.close().catch(() => {});
   }
 }
 
@@ -31,12 +46,13 @@ export async function probePressRanger(
   probe: Probe = inspectCapabilities,
 ) {
   if (!config.ownerUid || userId !== config.ownerUid) return "restricted";
-  if (!config.token?.trim()) return "unconfigured";
+  const token = config.token?.trim();
+  if (!token) return "unconfigured";
   try {
     await audit();
-    await probe(config.token);
+    await probe(token);
     return "connected";
-  } catch {
-    return "unavailable";
+  } catch (error) {
+    return error instanceof PressRangerProbeError ? error.diagnosis : "unavailable";
   }
 }

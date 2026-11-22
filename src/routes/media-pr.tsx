@@ -130,7 +130,9 @@ function MediaDashboard() {
                 ? "Press Ranger authenticated."
                 : connection.data === "restricted"
                   ? "Available to the configured founder."
-                  : "Press Ranger server credentials are pending."}
+                  : connection.data === "unconfigured"
+                    ? "Press Ranger server credentials are pending."
+                    : connection.data}
           </span>
         )}
       </div>
