@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { WorkspaceEvidenceView } from "@/components/workspace-evidence";
 import { SageResearchPilot } from "@/components/sage-research-pilot";
+import { SageAssignmentView } from "@/components/sage-assignment";
 import {
   AGENT_WORKSPACE_LINKS as links,
   AGENT_WORKSPACE_POLICY as policy,
@@ -74,13 +75,11 @@ export function AgentWorkspace() {
           </h2>
           <span className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
             <LockKeyhole className="h-4 w-4" aria-hidden="true" />
-            Read-only · preview source only
+            Read-only Founder HQ
           </span>
         </div>
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
-          Under construction for MyUSA AI 1st OS. This is an operator workspace, not a second CRM or
-          an agent runtime. Setup checkpoints are not live telemetry; operating evidence below is
-          separately verified when available. No agents are enabled here.
+          Review uGotLeads workflow evidence, approval status, and Main prospect reports.
         </p>
         <dl className="grid grid-cols-1 gap-4 border-y border-border py-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
@@ -95,7 +94,7 @@ export function AgentWorkspace() {
               icon: CheckCircle2,
             },
             {
-              label: "Not connected",
+              label: "Owner configuration",
               detail: "Server-only Main credential configuration",
               icon: Clock3,
             },
@@ -105,8 +104,8 @@ export function AgentWorkspace() {
               icon: CircleDashed,
             },
             {
-              label: "Not built",
-              detail: "Durable request-run-approval-stop worker flow",
+              label: "Release verification pending",
+              detail: "Durable Sage assignment and approval controls",
               icon: LockKeyhole,
             },
           ].map(({ label, detail, icon: Icon }) => (
@@ -131,17 +130,16 @@ export function AgentWorkspace() {
           </h2>
           <span className="inline-flex items-center gap-1.5 rounded-md bg-warning/20 px-2 py-1 text-xs font-medium text-foreground">
             <LockKeyhole className="h-3.5 w-3.5" aria-hidden="true" />
-            Private settings not connected
+            Private runtime settings
           </span>
         </div>
         <p className="text-sm font-medium">
           Stage 1 · {policy.environment}-only read-only operating evidence
         </p>
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
-          uGotLeads evidence API (PR #255) and owner-only key controls (PR #257) are released.
-          Founder HQ remains preview source only: no private settings configured, no authorized Main
-          data pulled and no read pilot verified. The direct prospect review below is not a recorded
-          OS workflow run; no canonical workflow run has been executed.
+          uGotLeads evidence API (PR #255) and owner-only key controls (PR #257) are released. Live
+          Main access requires the founder identity and the two project secrets. Check Live
+          operating evidence below for the current connection status.
         </p>
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
           Owner issues two separately scoped keys and stores directly in private Founder HQ secrets.
@@ -187,7 +185,8 @@ export function AgentWorkspace() {
           Work Queue
         </h2>
         <p className="text-sm text-muted-foreground">
-          No agent work is executed from this workspace.
+          Create, approve, or stop a Sage assignment in uGotLeads. Use its run ID to view status and
+          results here.
         </p>
         <h3 className="text-sm font-semibold">Planned stages (not executed tasks)</h3>
         <ol className="space-y-3">
@@ -228,6 +227,7 @@ export function AgentWorkspace() {
       </section>
 
       <WorkspaceEvidenceView />
+      <SageAssignmentView />
       <SageResearchPilot />
 
       <section aria-labelledby="workforce" className="space-y-4 border-t border-border pt-6">

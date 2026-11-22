@@ -27,12 +27,12 @@ export const AGENT_WORKSPACE_STAGES = [
   {
     title: "Owner-click Main prospect review",
     detail:
-      "The direct read-only Sage Research Pilot exists in preview source only. Configure its separate Main-only contacts:read, forms:read and prospects:read key. No authorized data has been pulled or 10-prospect report produced; this is not an OS workflow run. No client contacting or shared Boost AgentOS.",
+      "Configure the dedicated Main-only research key for the published direct prospect review.",
   },
   {
     title: "Real Ask Sage requests and controls",
     detail:
-      "Durable request-run-approval-stop worker flow is not built. No canonical workflow run has been executed from this workspace. Add meaningful approval and stop/revoke only with an approved worker backend; direct prospect review does not create a workflow run.",
+      "Create, approve and stop the bounded assignment in uGotLeads Agency Settings. Use its workflow run ID to check status and view its report here.",
   },
   {
     title: "Isolated Windows desktop / RTILA worker",
@@ -56,21 +56,20 @@ export const AGENT_WORKSPACE_MILESTONES = [
   },
   {
     title: "Founder HQ dedicated server secrets",
-    state: "NOT CONNECTED",
+    state: "OWNER SETUP",
     detail:
-      "No private settings configured. Founder UID and Main tenant must be securely configured with two separately scoped keys; never reuse a client-scoped or shared Boost key.",
+      "Set the founder UID, Main tenant and two dedicated keys in the private project Secrets screen. Check Live operating evidence for the current connection status.",
   },
   {
     title: "Actual Main evidence and read pilot",
     state: "NOT VERIFIED",
-    detail:
-      "No authorized data pulled, no 10-prospect report produced. Founder HQ readers are preview source only, not published; 60 focused preview tests passed, not a live Main verification.",
+    detail: "The live Founder HQ connection still requires a verified owner-authenticated read.",
   },
   {
-    title: "Durable request-run-approval-stop worker flow",
-    state: "NOT BUILT",
+    title: "Durable Sage assignment",
+    state: "VERIFICATION PENDING",
     detail:
-      "No canonical workflow run executed. Direct read-only prospect review is not an agent run, worker execution or approval/stop flow.",
+      "Production validation requires a dedicated Main key and a completed owner-approved test run.",
   },
 ] as const;
 
