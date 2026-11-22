@@ -1,3 +1,4 @@
+import { CampaignAttribution } from "@/components/pr-attribution";
 import { SageAssignmentView } from "@/components/sage-assignment";
 import { useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
@@ -242,6 +243,7 @@ function MediaDashboard() {
               </label>
               <label>
                 Source URL or record ID
+                {kind === "campaign" && <small className="block">For live uGotLeads totals, enter ugl:campaign: followed by the campaign ID.</small>}
                 <input name="source_ref" className={field} maxLength={1000} />
               </label>
               {isQuantityKind(kind) && (
