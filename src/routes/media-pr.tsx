@@ -1,3 +1,4 @@
+import { SageAssignmentView } from "@/components/sage-assignment";
 import { useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { checkPressRanger } from "@/lib/press-ranger.functions";
@@ -114,6 +115,7 @@ function MediaDashboard() {
           references with each result.
         </p>
       </header>
+      <SageAssignmentView />
       <div className="flex flex-wrap items-center gap-3">
         <Button
           variant="outline"
