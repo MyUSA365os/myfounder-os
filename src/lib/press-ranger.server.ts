@@ -10,7 +10,7 @@ class PressRangerProbeError extends Error {
   }
 }
 
-export async function inspectCapabilities(token: string, request: typeof fetch = fetch) {
+async function withPressRanger<T>(token: string, request: typeof fetch, action: (client: Client) => Promise<T>) {
   const client = new Client({ name: "MyUSA Sage PR", version: "1.0.0" });
   let lastStatus: number | undefined;
   let step: "initialization" | "capability lookup" = "initialization";
@@ -31,7 +31,7 @@ export async function inspectCapabilities(token: string, request: typeof fetch =
     await client.connect(transport, { timeout: 8_000 });
     step = "capability lookup";
     lastStatus = undefined;
-    await client.listTools(undefined, { timeout: 8_000 });
+    return await action(client);
   } catch (error) {
     const status = lastStatus !== undefined ? `HTTP ${lastStatus}` : "no HTTP response";
     const timedOut = error instanceof Error && /timed?\s*out|timeout/i.test(error.message);
@@ -59,4 +59,22 @@ export async function probePressRanger(
   } catch (error) {
     return error instanceof PressRangerProbeError ? error.diagnosis : "unavailable";
   }
+}
+
+export async function inspectCapabilities(token: string, request: typeof fetch = fetch) {
+  await withPressRanger(token, request, client => client.listTools(undefined, {timeout:8000}));
+}
+
+export async function reviewFounderRelease(token: string) {
+  const id = "fff47739-6460-4bde-a66f-857c7ebf8d13";
+  return withPressRanger(token, fetch, async client => {
+    const catalog = await client.listTools(undefined, {timeout:8000});
+    const tool = catalog.tools.find(item => ["getpressrelease","readpressrelease","showpressrelease","getpressreleasebyid"].includes(item.name.toLowerCase().replace(/[^a-z]/g,"")));
+    if (!tool) throw new Error("Press Ranger release reader unavailable");
+    const field = Object.keys(tool.inputSchema.properties ?? {}).find(key => ["id","uuid","pressreleaseid","pressreleaseuuid","releaseid"].includes(key.toLowerCase().replace(/_/g,"")));
+    if (!field) throw new Error("Release reader parameter unavailable");
+    const result = await client.callTool({name:tool.name,arguments:{[field]:id}},undefined,{timeout:8000});
+    if(result.isError || (!Array.isArray(result.content) || !result.content.length)) throw new Error("Release lookup unavailable");
+    return "Sage retrieved the founder announcement record from Press Ranger for this review.";
+  });
 }
