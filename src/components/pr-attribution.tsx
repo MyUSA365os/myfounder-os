@@ -13,8 +13,8 @@ export function CampaignAttribution({ campaignId, userId }: { campaignId: string
   if (query.isError) return <span role="status">CRM attribution unavailable</span>;
   if (!query.data) return <span>Loading CRM attribution…</span>;
   return <dl>
-    <dt>CRM lead conversions</dt><dd>{query.data.leadConversions}</dd>
-    <dt>Retained tracked-link clicks</dt><dd>{query.data.retainedTrackedClicks}</dd>
+    <dt>{campaignId === "myusa-founder-launch" ? "New CRM contacts from founder launch" : "CRM lead conversions"}</dt><dd>{query.data.leadConversions}</dd>
+    <dt>{campaignId === "myusa-founder-launch" ? "Retained founder launch landing page views" : "Retained tracked-link clicks"}</dt><dd>{query.data.retainedTrackedClicks}</dd>
     <dt>Last checked</dt><dd>{new Date(query.data.checkedAt).toLocaleString()}</dd>
   </dl>;
 }
