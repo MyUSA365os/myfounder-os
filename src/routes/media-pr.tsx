@@ -1,3 +1,4 @@
+import { verifyPrReader } from "@/lib/pr-attribution.functions";
 import { CampaignAttribution } from "@/components/pr-attribution";
 import { SageAssignmentView } from "@/components/sage-assignment";
 import { useState, type FormEvent } from "react";
@@ -34,6 +35,8 @@ function MediaDashboard() {
   const { user } = useAuth();
   const { data: workspace, isError: workspaceError } = useWorkspace();
   const queryClient = useQueryClient();
+  const verifyReader = useServerFn(verifyPrReader);
+  const reader = useMutation({mutationFn: () => verifyReader()});
   const runCheck = useServerFn(checkPressRanger);
   const connection = useMutation({ mutationFn: () => runCheck() });
   const [kind, setKind] = useState<MediaKind>("campaign");
@@ -117,6 +120,8 @@ function MediaDashboard() {
         </p>
       </header>
       <SageAssignmentView />
+      <Button variant="outline" disabled={reader.isPending} onClick={() => reader.mutate()}>Check uGotLeads attribution reader</Button>
+      {(reader.isSuccess || reader.isError) && <p role="status">{reader.data?.authenticated ? "Main PR attribution reader authenticated." : "Main PR attribution reader unavailable."}</p>}
       <div className="flex flex-wrap items-center gap-3">
         <Button
           variant="outline"
