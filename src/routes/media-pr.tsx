@@ -1,4 +1,5 @@
 import { verifyPrReader } from "@/lib/pr-attribution.functions";
+import { FounderLaunchReviews } from "@/components/pr-reviews";
 import { CampaignAttribution } from "@/components/pr-attribution";
 import { SageAssignmentView } from "@/components/sage-assignment";
 import { useState, type FormEvent } from "react";
@@ -120,6 +121,7 @@ function MediaDashboard() {
         </p>
       </header>
       <SageAssignmentView />
+      <FounderLaunchReviews />
       <Button variant="outline" disabled={reader.isPending} onClick={() => reader.mutate()}>Check uGotLeads attribution reader</Button>
       {(reader.isSuccess || reader.isError) && <p role="status">{reader.data?.authenticated ? "Main PR attribution reader authenticated." : "Main PR attribution reader unavailable."}</p>}
       <div className="flex flex-wrap items-center gap-3">
