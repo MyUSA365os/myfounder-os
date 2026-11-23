@@ -4,6 +4,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { reviewFounderRelease } from "./press-ranger.server";
 import { fetchCampaignTotals } from "./pr-attribution.server";
 
 type Review = {
@@ -64,7 +65,10 @@ export const launchReview = createServerFn({ method: "POST" })
       if (row.error) throw new Error("Assignment unavailable");
       if (!row.data.completed_at) {
         const metrics = await fetchCampaignTotals("myusa-founder-launch");
-        const report = `The founder launch recorded ${metrics.retainedTrackedClicks} landing page views and ${metrics.leadConversions} new CRM contacts as of ${metrics.checkedAt}. Views include internal verification traffic.`;
+        const token = process.env.SAGE_PRESS_RANGER_TOKEN;
+        if (!token) throw new Error("Press Ranger credential unavailable");
+        const releaseEvidence = await reviewFounderRelease(token);
+        const report = `The founder launch recorded ${metrics.retainedTrackedClicks} landing page views and ${metrics.leadConversions} new CRM contacts as of ${metrics.checkedAt}. Views include internal verification traffic. ${releaseEvidence}`;
         const saved = await table
           .update({ report, completed_at: new Date().toISOString(), approved_by: context.userId })
           .eq("id", data.id)
