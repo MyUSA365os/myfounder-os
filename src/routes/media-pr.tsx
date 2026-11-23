@@ -306,7 +306,15 @@ function MediaDashboard() {
                     <td className="px-3">{mediaKinds[record.kind]}</td>
                     <td className="px-3">{record.title}</td>
                     <td className="px-3">{record.quantity ?? "—"}</td>
-                    <td className="max-w-52 break-all px-3">{record.source_ref ?? "—"}</td>
+                    <td className="max-w-52 break-all px-3">{record.source_ref ?? "—"}
+                      {user && record.kind === "campaign" && (
+                        record.company === "MyUSA Local" && record.campaign === "Founder launch" &&
+                        record.source_ref === "https://pressranger.com/press-releases/fff47739-6460-4bde-a66f-857c7ebf8d13/edit"
+                          ? <CampaignAttribution userId={user.id} campaignId="myusa-founder-launch" />
+                          : record.source_ref?.match(/^ugl:campaign:([A-Za-z0-9_-]{1,160})$/) &&
+                            <CampaignAttribution userId={user.id} campaignId={record.source_ref.slice(13)} />
+                      )}
+                    </td>
                     <td className="px-3">
                       <select
                         className={field}
